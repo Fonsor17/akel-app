@@ -1,18 +1,32 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <button @click="toggle">Add Child</button>
+  <AddChild v-if='isShown'/>
+  <div class="children">
+      <ChildrenList/>
   </div>
+
+
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import ChildrenList from '../components/ChildrenList.vue'
+import AddChild from '../components/AddChild.vue'
+import { ref } from 'vue'
 
 export default {
-  name: 'HomeView',
-  components: {
-    HelloWorld
-  }
+  components: {ChildrenList , AddChild },
+  setup() {
+   const isShown = ref(false)
+   const toggle = () => {
+      isShown.value = !isShown.value
+   }
+   return { isShown, toggle }
+   }
+
+
 }
 </script>
+
+<style>
+
+</style>
