@@ -1,34 +1,44 @@
 <template>
-    <router-link :to="{ name: 'single-evaluation', params: { id: evaluation.id, childId: childId }} ">
-<div class="evaluation">
-    <h1>{{ evaluation.date }}</h1>
-    <p>On {{ evaluation.child }}</p>
-    <p>By {{ evaluation.caregiver }}</p>
-    
-</div>
-</router-link>
+  <router-link
+    :to="{
+      name: 'single-evaluation',
+      params: { id: evaluation.id },
+    }"
+  >
+    <div class="evaluation">
+      <h3>{{ evaluation.date }}</h3>
+      <p>On {{ evaluation.child }}</p>
+      <p>By {{ evaluation.caregiver }}</p>
+    </div>
+  </router-link>
 </template>
 
 <script>
-import { ref } from 'vue';
+
 
 export default {
-    props:['evaluation', 'caregiverId'],
-    setup(props) {
-       
-        const childId = ref(props.caregiverId)
+  props: ["evaluation"],
+  setup(props) {
+    console.log('evaID:::');
+   console.log(props.evaluation.id);
+   }
 
-        console.log('props.caregiverId');
-        console.log(childId.value);
-
-        return childId
-
-    }
-
-
-}
+};
 </script>
 
 <style>
-
+.evaluation {
+  list-style-type: none;
+  background: #fff;
+  padding: 5px 10px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+}
+p,
+h3 {
+  margin: 4px;
+}
 </style>

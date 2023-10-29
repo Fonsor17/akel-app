@@ -1,44 +1,37 @@
 <template>
   <div class="children-list">
       <div class="child"  v-for="child in children" :key="child.id">
-     <SingleChild :child="child"/>
+     <SingleChild :child="child" />
   </div>
   </div>
   </template>
   
   <script>
-  import { ref } from "vue";
-//   import getChildren from "../composables/getChildren";
+  // function to get caregivers list
+  import getCollection from "../composables/getCollection";
+  //components imports
   import SingleChild from "./SingleChild.vue";
-
-  // firebase imports
-import { db } from '../firebase/config'
-import { collection, getDocs } from 'firebase/firestore'
-
-  
   
   export default {
-    component: { SingleChild },
-      setup() {
-        const children = ref([])
-
-    const colRef = collection(db, 'children')
-
-    getDocs(colRef)
-      .then(snapshot => {
-        let docs = []
-        snapshot.docs.forEach(doc => {
-          docs.push({ ...doc.data(), id: doc.id })
-        })
-        children.value = docs
-      })
-
-    return { children }
-  }
-}
+    components: { SingleChild },
+    setup() {
+      // get the collection of children from firebase
+      const { documents: children } = getCollection("children");
+  
+      return { children };
+    },
+  };
   </script>
   
-  
   <style>
-  
+  .child {
+    list-style-type: none;
+    background: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    display: flex;
+    max-width: 400px;
+  }
   </style>
+  

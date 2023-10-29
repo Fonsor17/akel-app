@@ -1,25 +1,30 @@
 <template>
- <EvaluationsList :id="id" :by="'caregivers'"/>
+  <div class="caregiver-title">
+    <h2>{{ name }}</h2>
+  </div>
+  <EvaluationsList :name="name" :by="'caregivers'" />
 </template>
 
 <script>
-import EvaluationsList from '../components/EvaluationsList.vue';
-import { useRoute } from 'vue-router'
-import { ref } from "vue"
-
-
+import EvaluationsList from "../components/EvaluationsList.vue";
+import { useRoute } from "vue-router";
+import { ref } from "vue";
 
 export default {
-    components: { EvaluationsList },
-    setup() {
-       const route = useRoute()
-       const id = ref(route.params.id);
+  components: { EvaluationsList },
+  setup() {
+    const route = useRoute();
+    const name = ref(route.params.name);
 
-       return { id }
-     }
-}
+    return { name };
+  },
+};
 </script>
 
 <style>
-
+.caregiver-title {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
 </style>

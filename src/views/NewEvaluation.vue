@@ -2,18 +2,18 @@
   <div class="new-evaluation">
     <form @submit.prevent="handleSubmit">
       <label>Caregiver</label>
-      <select v-model="caregiver">
+      <select v-model="caregiver" required>
         <option disabled value="">Please select one</option>
         <option v-for="caregiver in caregivers" :key="caregiver.id">
-          {{ caregiver.name + " " + caregiver.lastname }}
+          {{ caregiver.fullName }}
         </option>
       </select>
       <br />
       <label>Child</label>
-      <select v-model="child">
+      <select v-model="child" required>
         <option disabled value="">Please select one</option>
         <option v-for="child in children" :key="child.id">
-          {{ child.name + " " + child.lastname }}
+          {{ child.fullName }}
         </option>
       </select>
       <label> "Was the child happy after the session?</label>
@@ -22,7 +22,7 @@
         name="happiness"
         id="happiness"
         value="yes"
-        v-model="happiness"
+        v-model="isHappy"
       />
       <label for="happiness">YES</label>
       <input
@@ -30,7 +30,7 @@
         name="happiness"
         id="happiness"
         value="no"
-        v-model="happiness"
+        v-model="isHappy"
       />
       <label for="happiness">NO</label>
       <br />
@@ -40,7 +40,7 @@
         name="communication"
         id="communication"
         value="yes"
-        v-model="communication"
+        v-model="isCommunicative"
       />
       <label for="comunication">YES</label>
       <input
@@ -48,7 +48,7 @@
         name="communication"
         id="communication"
         value="no"
-        v-model="communication"
+        v-model="isCommunicative"
       />
       <label for="communication">NO</label>
       <br />
@@ -58,7 +58,7 @@
         name="success"
         id="success"
         value="yes"
-        v-model="success"
+        v-model="isSuccess"
       />
       <label for="success">YES</label>
       <input
@@ -66,107 +66,122 @@
         name="success"
         id="success"
         value="no"
-        v-model="success"
+        v-model="isSuccess"
       />
       <label for="success">NO</label>
-      <br>
+      <br />
       <label for="data">Date:</label>
-      <input type="date" id="data" name="data" v-model="date" required>
-
+      <input type="date" id="data" name="data" v-model="date" required />
 
       <button class="submit">Submit New Evaluation</button>
     </form>
+    <div class="confirmation" v-if="isShown">
+      <h3>New evaluation added</h3>
+      <div>
+        <button @click="redirect">See Evaluation</button>
+        <button @click="isShown = !isShown">Close</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-// import getChildren from "../composables/getChildren";
-// import getCollection from "../composables/getCollection";
-// import { ref } from "vue";
-
-// import { useRouter } from "vue-router"
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import getUser from "../composables/getUser";
+import getCollection from "../composables/getCollection";
+// firebase imports
+import { db } from "../firebase/config";
+import { collection, addDoc } from "firebase/firestore";
 
 export default {
-//   setup() {
-//     const { children, errorChildren, loadChildren } = getChildren();
+  setup() {
+    const router = useRouter();
+    // get the collection of caregivers to show them as options
+    const { documents: caregivers } = getCollection("caregivers");
 
-//     loadChildren();
+    // get the collection of children to show them as options
+    const { documents: children } = getCollection("children");
+    // to conditionally show the confirmation of submitted form
+    let isShown = ref(false);
+    let redirectURL = ref(null);
 
-//     const { caregivers, errorCaregivers, loadCaregivers } = getCaregivers();
+    // all proprieties needed for th evaluation object
+    const { user } = getUser();
+    const caregiver = ref("");
+    const child = ref("");
+    const date = ref(null);
+    const isHappy = ref(null);
+    const isCommunicative = ref(null);
+    const isSuccess = ref(null);
 
-//     loadCaregivers();
-    
-    
-//     const caregiver = ref(null);
-//     const child = ref(null);
-//     const happiness = ref(null);
-//     const communication = ref(null);
-//     const success = ref(null);
-//     const date = ref(new Date().toISOString().substr(0, 10));
-//     const id = ref(null)
-//     let redirectURL = ref(null)
-//     const router = useRouter()
+    //function to submit the evaluation
+    const handleSubmit = async () => {
+      const colRef = collection(db, "evaluations");
 
-//     const handleSubmit = async () => {
-//       let evaluation = {
-//         caregiver: caregiver.value,
-//         child: child.value,
-//         date: date.value,
-//         // converting in boolean yes or no
-//         happiness: happiness.value === "yes",
-//         communication: communication.value === "yes",
-//         success: success.value === "yes",
-//       };
+      const docRef = await addDoc(colRef, {
+        caregiver: caregiver.value,
+        child: child.value,
+        date: date.value,
+        isHappy: isHappy.value === "yes",
+        isCommunicative: isCommunicative.value === "yes",
+        isSuccess: isSuccess.value === "yes",
+        userUid: user.value.uid,
+      });
+      redirectURL = "/evaluations/" + docRef.id;
+      isShown.value = !isShown.value;
+      console.log(docRef.id);
+    };
+    // function to redirect to the evaluation page
+    const redirect = () => {
+      router.push({ path: redirectURL });
+    };
 
-//       await fetch("http://localhost:3000/evaluations", {
-//   method: "POST",
-//   headers: { "Content-Type": "application/json" },
-//   body: JSON.stringify(evaluation),
-// })
-//   .then((response) => {
-//     if (!response.ok) {
-//       throw new Error('Errore nella richiesta POST');
-//     }
-//     return response.json();
-//   })
-//   .then((data) => {
-//   id.value = data.id
-//   redirectURL.value = '/evaluations/' + data.id
-//   router.push({ path: redirectURL.value, query: { evaluation: 'new' } });
-//   })
-//   .catch((error) => {
-//     console.error('Errore durante la richiesta POST:', error);
-//   });
-//  console.log(redirectURL.value);
- 
-//     console.log(router);
-//     // router.push(redirectURL.value, params: { new: 'tree'})
-
-//       console.log(evaluation);
-//       // const router = useRouter()
-//       // router.push({ name: })
-//       console.log(typeof evaluation.happiness);
-//     };
-
-//     return {
-//       children,
-//       errorChildren,
-//       caregivers,
-//       errorCaregivers,
-//       caregiver,
-//       child,
-//       happiness,
-//       communication,
-//       success,
-//       date,
-//       handleSubmit,
-//       redirectURL
-//     };
-//   },
+    return {
+      children,
+      caregivers,
+      handleSubmit,
+      caregiver,
+      child,
+      date,
+      isHappy,
+      isCommunicative,
+      isSuccess,
+      isShown,
+      redirect,
+    };
+  },
 };
 </script>
 
 <style>
+.confirmation {
+  background-color: #008cff;
+  border-radius: 12px;
+  position: fixed;
+  bottom: 20%;
+  right: 0%;
+  transform: translate(-50%, -50%);
+  width: 350px;
+  text-align: center;
+  padding: 30px 30px 40px 30px;
+  color: white;
+}
+
+.confirmation button {
+  display: block;
+  margin-top: 60px;
+  background: white;
+  color: #008cff;
+  border: none;
+  padding: 8px 16px;
+  font-size: 18px;
+}
+
+.confirmation div {
+  display: flex;
+  justify-content: space-between;
+}
 form {
   max-width: 480px;
   margin: 0 auto;

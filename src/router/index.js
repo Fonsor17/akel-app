@@ -5,40 +5,71 @@ import SingleEvaluation from '../views/SingleEvaluation.vue'
 import CaregiversPage from '../views/CaregiversPage.vue'
 import CaregiverPage from '../views/CaregiverPage.vue'
 import ChildPage from '../views/ChildPage.vue'
+import SignupUser from '../views/SignupUser.vue'
+import LoginUser from '../views/LoginUser.vue'
+
+// firebase import
+import { auth } from '../firebase/config'
+
+const requireAuth = (to, from, next) => {
+  let user = auth.currentUser
+  if (!user) {
+    // redirect them 
+    next({ name: 'Login' })
+  } else {
+    next()
+  }
+}
 
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    beforeEnter: requireAuth
   },
   {
-    path:'/children/:id',
+    path: '/login',
+    name: 'Login',
+    component: LoginUser
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: SignupUser
+  },
+  {
+    path:'/children/:name',
     name: 'child',
-    component: ChildPage
+    component: ChildPage,
+    beforeEnter: requireAuth
   },
 
   {
     path: '/new-evaluation',
     name: 'new-evaluation',
-    component: NewEvaluation
+    component: NewEvaluation,
+    beforeEnter: requireAuth
   },
   {
     path:'/evaluations/:id',
     name: 'single-evaluation',
     component: SingleEvaluation,
+    beforeEnter: requireAuth,
     props: true
   },
   {
     path:'/caregivers',
     name: 'caregivers',
-    component: CaregiversPage
+    component: CaregiversPage,
+    beforeEnter: requireAuth
   },
   {
-    path:'/caregivers/:id',
+    path:'/caregivers/:name',
     name: 'caregiver',
-    component: CaregiverPage
+    component: CaregiverPage,
+    beforeEnter: requireAuth
   },
 
 ]

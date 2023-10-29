@@ -1,78 +1,71 @@
 <template>
-<div class="add-caregiver">
+  <button @click="isShown = !isShown">Add Caregiver</button>
+  <div class="add-caregiver" v-if="isShown">
     <form @submit.prevent="handleSubmit" v-if="!confirmed">
-        <label>Name</label>
-        <input type="text" v-model="newCaregiverName" required>
-        <label>Lastname</label>
-        <input type="text" v-model="newCaregiverLastname" required>
-        <button>Add Caregiver</button>
+      <label>Name</label>
+      <input type="text" v-model="caregiverName" required />
+      <label>Lastname</label>
+      <input type="text" v-model="caregiverLastname" required />
+      <button>Add Caregiver</button>
     </form>
     <div v-else class="confirmed">
-        <h1>New Caregiver Added:</h1>
-        <p>{{ newCaregiverName + newCaregiverLastname }}</p>
-        <button @click="refresh">Close</button>
-    
-
+      <h1>New Caregiver Added:</h1>
+      <p>{{ caregiverName + caregiverLastname }}</p>
+      <button @click="isShown = !isShown">Close</button>
     </div>
-   
-</div>
+  </div>
 </template>
 
 <script>
 import { ref } from "vue";
-// import { useRouter } from "vue-router"
+import getUser from "../composables/getUser";
+// firebase imports
+import { db } from "../firebase/config";
+import { collection, addDoc } from "firebase/firestore";
 
 export default {
-    setup() {
-        const confirmed = ref(false)
-        const newCaregiverName = ref('')
-    const newCaregiverLastname = ref('')
-    // const router = useRouter()
+  setup() {
+    const isShown = ref(false);
+    const confirmed = ref(false);
 
-     const handleSubmit = async () => {
-        
-        const caregiver = {
-            name: newCaregiverName.value,
-            lastname: newCaregiverLastname.value
-        }
-      await fetch('http://localhost:3000/caregivers', {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json'},
-        body: JSON.stringify(caregiver)
-      })
+    const { user } = getUser();
+    const caregiverName = ref("");
+    const caregiverLastname = ref("");
 
-      confirmed.value = !confirmed.value
+    // function to add the caregiver under the user Uid
+    const handleSubmit = async () => {
+      const colRef = collection(db, "caregivers");
 
-      
-    //   console.log(router);
+      await addDoc(colRef, {
+        fullName: caregiverName.value + " " + caregiverLastname.value,
+        userUid: user.value.uid,
+      });
 
-    // refreshPage()
-     }
-     const refresh = () => {
-       window.location.reload();
-    }
+      confirmed.value = !confirmed.value;
+    };
 
-      return { newCaregiverName, newCaregiverLastname, handleSubmit, confirmed, refresh }
-
-     }
-   
-
-
-
-}
+    return {
+      caregiverName,
+      caregiverLastname,
+      handleSubmit,
+      confirmed,
+      isShown,
+    };
+  },
+};
 </script>
 
 <style scoped>
-
 .confirmed {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
 }
 h1 {
-    display: inline-block;
+  display: inline-block;
   margin-top: 30px;
   position: relative;
   font-size: 20px;
@@ -80,7 +73,7 @@ h1 {
   margin-bottom: 10px;
 }
 h1::before {
-    content: "";
+  content: "";
   display: block;
   width: 100%;
   height: 100%;
@@ -92,17 +85,17 @@ h1::before {
   transform: rotateZ(-1.5deg);
 }
 .add-caregiver {
-    background-color: #008cff;
-    border-radius: 12px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 350px;
-    text-align: center;
-    padding: 30px 30px 40px 30px
+  background-color: #008cff;
+  border-radius: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 350px;
+  text-align: center;
+  padding: 30px 30px 40px 30px;
 }
- form {
+form {
   max-width: 480px;
   margin: 0 auto;
   text-align: left;
@@ -136,8 +129,7 @@ label::before {
   left: -30px;
   transform: rotateZ(-1.5deg);
 }
-button {
-  
+.add-caregiver button {
   display: block;
   margin-top: 60px;
   background: white;
@@ -146,5 +138,4 @@ button {
   padding: 8px 16px;
   font-size: 18px;
 }
-
 </style>

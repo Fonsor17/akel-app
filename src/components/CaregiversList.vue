@@ -7,27 +7,25 @@
 </template>
 
 <script>
-
 // function to get caregivers list
 import getCollection from "../composables/getCollection";
 //components imports
 import SingleCaregiver from "./SingleCaregiver.vue";
 
-
 export default {
-components: { SingleCaregiver },
+  components: { SingleCaregiver },
   setup() {
-    const { documents: caregivers } = getCollection('caregivers')
+    // get the collection of caregivers from firebase
+    const { documents: caregivers } = getCollection("caregivers");
 
     return { caregivers };
-  }
-  
+  },
 };
 </script>
 
 <style>
 .caregiver {
-    list-style-type: none;
+  list-style-type: none;
   background: #fff;
   padding: 5px 10px;
   border-radius: 6px;
