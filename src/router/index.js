@@ -40,7 +40,7 @@ const routes = [
     component: SignupUser
   },
   {
-    path:'/children/:name',
+    path:'/children/:name/:id',
     name: 'child',
     component: ChildPage,
     beforeEnter: requireAuth
@@ -66,7 +66,7 @@ const routes = [
     beforeEnter: requireAuth
   },
   {
-    path:'/caregivers/:name',
+    path:'/caregivers/:name/:id',
     name: 'caregiver',
     component: CaregiverPage,
     beforeEnter: requireAuth

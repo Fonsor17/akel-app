@@ -1,5 +1,7 @@
 <template>
-  <button @click="isShown = !isShown">Add Caregiver</button>
+  <button @click="isShown = !isShown">
+    Add Caregiver<i class="fa-solid fa-person-circle-plus"></i>
+  </button>
   <div class="add-caregiver" v-if="isShown">
     <form @submit.prevent="handleSubmit" v-if="!confirmed">
       <label>Name</label>
@@ -8,10 +10,15 @@
       <input type="text" v-model="caregiverLastname" required />
       <button>Add Caregiver</button>
     </form>
+
     <div v-else class="confirmed">
       <h1>New Caregiver Added:</h1>
-      <p>{{ caregiverName + caregiverLastname }}</p>
-      <button @click="isShown = !isShown">Close</button>
+      <p>{{ caregiverName + ' ' +  caregiverLastname }}</p>
+      <button @click="close">Close</button>
+    </div>
+
+    <div class="close" @click="close">
+      <i class="fa-solid fa-xmark"></i>
     </div>
   </div>
 </template>
@@ -42,7 +49,14 @@ export default {
       });
 
       confirmed.value = !confirmed.value;
+      caregiverName.value = "";
+      caregiverLastname.value  = ""
     };
+
+    const close = () => {
+      isShown.value = !isShown.value
+      confirmed.value = false
+    }
 
     return {
       caregiverName,
@@ -50,6 +64,7 @@ export default {
       handleSubmit,
       confirmed,
       isShown,
+      close
     };
   },
 };
@@ -64,28 +79,20 @@ export default {
   text-align: center;
   color: white;
 }
+p {
+  color: #008cff;
+}
+ 
 h1 {
   display: inline-block;
   margin-top: 30px;
   position: relative;
   font-size: 20px;
-  color: white;
+  color: #008cff;
   margin-bottom: 10px;
 }
-h1::before {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: #008cff;
-  position: absolute;
-  z-index: -1;
-  padding-right: 40px;
-  left: -30px;
-  transform: rotateZ(-1.5deg);
-}
 .add-caregiver {
-  background-color: #008cff;
+  background-color: white;
   border-radius: 12px;
   position: absolute;
   top: 50%;
@@ -94,6 +101,7 @@ h1::before {
   width: 350px;
   text-align: center;
   padding: 30px 30px 40px 30px;
+  border: 1px solid #008cff;
 }
 form {
   max-width: 480px;
@@ -110,11 +118,12 @@ textarea {
   border: 1px solid #eee;
 }
 label {
+  width: 150px;
   display: inline-block;
   margin-top: 30px;
   position: relative;
   font-size: 20px;
-  color: #008cff;
+  color: white;
   margin-bottom: 10px;
 }
 label::before {
@@ -122,20 +131,33 @@ label::before {
   display: block;
   width: 100%;
   height: 100%;
-  background: white;
+  background: #008cff;
   position: absolute;
+  border-radius: 0px 6px 6px 0px;
   z-index: -1;
   padding-right: 40px;
   left: -30px;
-  transform: rotateZ(-1.5deg);
 }
 .add-caregiver button {
   display: block;
-  margin-top: 60px;
-  background: white;
-  color: #008cff;
+  margin-top: 40px;
   border: none;
   padding: 8px 16px;
   font-size: 18px;
+}
+.fa-solid {
+  margin-left: 10px;
+  font-size: 24px;
+}
+.close {
+  cursor: pointer;
+  font-size: 36px;
+  color: #008cff;
+  position: absolute;
+  top: 0px;
+  right: 10px;
+}
+.close .fa-solid {
+  font-size: 36px;
 }
 </style>

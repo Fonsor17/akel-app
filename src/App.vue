@@ -21,6 +21,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   // text-align: center;
   color: #008cff;
+  padding: 0px 10px;
 }
 a {
   text-decoration: none;
@@ -33,7 +34,6 @@ nav {
 
   a {
     font-weight: bold;
-    color: #2c3e50;
     
 
     &.router-link-exact-active {

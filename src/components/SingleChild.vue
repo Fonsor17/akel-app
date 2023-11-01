@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="{ name: 'child', params: { name: child.fullName } }">
+  <router-link :to="{ name: 'child', params: { name: child.fullName, id: child.id } }">
     <h3>{{ child.fullName }}</h3>
   </router-link>
 </template>
@@ -16,4 +16,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+h3 {
+  font-weight: 600;
+}
+</style>

@@ -4,12 +4,14 @@
       <router-link :to="{ name: 'new-evaluation' }">New Evaluation</router-link>
       <router-link :to="{ name: 'home' }">Children</router-link>
       <router-link :to="{ name: 'caregivers' }">Caregivers</router-link>
-      <div>
-        <button @click="handleClick">Logout</button>
-        <div>logged as {{ user.email }}</div>
+     <!--conditionally show the user's e-mail and logout button if the user is logged-->
+      <div class="logged-in">
+        <p>{{ user.email }}</p>
+        <button @click="handleClick" class="logout">Logout <i class="fa-solid fa-right-from-bracket"></i></button>
       </div>
       
     </nav>
+    <!--conditionally show login and sign up link if the user is not logged-->
     <div v-if="!user">
       <router-link to="/login">Login</router-link>
       <router-link to="/signup">Signup</router-link>
@@ -53,10 +55,10 @@ setup() {
 
 <style>
 header {
+  position: relative;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  /* max-width: 1200px; */
   margin: 0 auto;
   padding: 10px;
 }
@@ -73,4 +75,31 @@ header a.router-link-active {
   color: #444;
   font-weight: bold;
 }
+.logged-in {
+  display: flex;
+  gap: 10px;
+  position: absolute;
+  top: 0px;
+  right: -1%;
+}
+.logged-in>button {
+  font-size: 13px;
+  padding: 5px;
+  margin: 0px
+}
+.logged-in p {
+  font-size: 14px;
+  color: #bbb;
+}
+nav {
+  margin-top: 30px;
+  display: flex;
+  gap: 30px;
+}
+
+nav a {
+  color: #bbb;
+}
+
+
 </style>

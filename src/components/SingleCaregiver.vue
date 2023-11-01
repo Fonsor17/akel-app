@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="{ name: 'caregiver', params: { name: caregiver.fullName } }">
+  <router-link :to="{ name: 'caregiver', params: { name: caregiver.fullName, id: caregiver.id } }">
     <h3>{{ caregiver.fullName }}</h3>
   </router-link>
 </template>
@@ -17,4 +17,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+h3 {
+  font-weight: 600;
+}
+</style>

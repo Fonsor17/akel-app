@@ -1,17 +1,19 @@
 <template>
-  <p v-if="by === 'caregivers'">Evaluation conducted by {{ name }}:</p>
-  <p v-if="by === 'children'">Evaluation conducted on {{ name }}:</p>
-  <h3 v-if="evaluations && evaluations.length === 0"> 
+  <div class="intro">
+  <p v-if="by === 'caregivers'">Evaluations conducted by <br>{{ name }}:</p>
+  <p v-if="by === 'children'">Evaluations conducted on <br>{{ name }}:</p>
+  <router-link :to="{ name: 'new-evaluation' }">
+    <button class="add-evaluation">Add Evaluation<i class="fa-solid fa-file-circle-plus"></i></button>
+  </router-link>
+</div>
+  <!-- <h3 v-if="evaluations && evaluations.length === 0"> 
     No {{ name }}' evaluations found
-  </h3>
+  </h3> -->
   <EvaluationCard
     v-for="evaluation in evaluations"
     :key="evaluation.id"
     :evaluation="evaluation"
   />
-  <router-link :to="{ name: 'new-evaluation' }">
-    <button class="add-evaluation">Add Evaluation</button>
-  </router-link>
 </template>
 
 <script>
@@ -50,5 +52,24 @@ export default {
 <style scoped>
 p {
   margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.intro {
+  max-width: 400px;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.intro button {
+  margin: 0px
+}
+
+.add-evaluation {
+ padding: 6px;
+}
+.fa-solid {
+  margin-left: 10px;
 }
 </style>

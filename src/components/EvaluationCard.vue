@@ -6,23 +6,22 @@
     }"
   >
     <div class="evaluation">
-      <h3>{{ evaluation.date }}</h3>
-      <p>On {{ evaluation.child }}</p>
-      <p>By {{ evaluation.caregiver }}</p>
+      <h3>On {{ evaluation.date }}</h3>
+      <div class="evaluation-details">
+        <p>Conducted on <b>{{ evaluation.child }}</b></p>
+        <p>By <b>{{ evaluation.caregiver }}</b></p>
+      </div>
     </div>
   </router-link>
 </template>
 
 <script>
-
-
 export default {
   props: ["evaluation"],
   setup(props) {
-    console.log('evaID:::');
-   console.log(props.evaluation.id);
-   }
-
+    console.log("evaID:::");
+    console.log(props.evaluation.id);
+  },
 };
 </script>
 
@@ -41,4 +40,6 @@ p,
 h3 {
   margin: 4px;
 }
+
+
 </style>

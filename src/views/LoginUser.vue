@@ -1,4 +1,5 @@
 <template>
+  <div class="form-container">
     <form @submit.prevent="handleSubmit">
       <h2>Login</h2>
   
@@ -11,6 +12,7 @@
       <button>Login</button>
       <div v-if="error">{{ error }}</div>
     </form>
+  </div>
   </template>
   
   <script>
@@ -38,3 +40,20 @@
     }
   }
   </script>
+
+ <style>
+ .form-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+ }
+
+ .form-container h2 {
+  text-align: center;
+  font-size: 24px;
+ }
+
+ .form-container label {
+  margin-bottom: 0px;
+ }
+</style>

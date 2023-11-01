@@ -27,7 +27,7 @@
   .child {
     list-style-type: none;
     background: #fff;
-    padding: 5px 10px;
+    padding: 10px;
     border-radius: 6px;
     margin-bottom: 12px;
     display: flex;

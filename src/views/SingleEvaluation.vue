@@ -1,4 +1,5 @@
 <template>
+  <div class="evaluation-container">
   <div v-if="evaluation" class="evaluation">
     <h3>Evaluation of {{ evaluation.date }}</h3>
     <h3>
@@ -31,6 +32,8 @@
     </router-link>
   </div>
   <div v-else>Evaluation not found</div>
+</div>
+  
 </template>
 
 <script>
@@ -68,6 +71,11 @@ export default {
 </script>
 
 <style>
+.evaluation-container {
+  display: flex;
+  justify-content: center;
+}
+
 .evaluation {
   display: flex;
   flex-direction: column;
@@ -75,5 +83,8 @@ export default {
 }
 .evaluation p {
   margin: 10px 0;
+}
+.evaluation h3 {
+  font-weight: 700;
 }
 </style>

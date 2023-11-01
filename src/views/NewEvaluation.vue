@@ -1,82 +1,114 @@
 <template>
   <div class="new-evaluation">
     <form @submit.prevent="handleSubmit">
-      <label>Caregiver</label>
-      <select v-model="caregiver" required>
-        <option disabled value="">Please select one</option>
-        <option v-for="caregiver in caregivers" :key="caregiver.id">
-          {{ caregiver.fullName }}
-        </option>
-      </select>
+      <div class="custom-dropdown">
+        <label>Caregiver:</label>
+        <select v-model="caregiver" required>
+          <option disabled value="">Please select one</option>
+          <option v-for="caregiver in caregivers" :key="caregiver.id">
+            {{ caregiver.fullName }}
+          </option>
+        </select>
+      </div>
+      <div class="custom-dropdown">
+        <label>Child:</label>
+        <select v-model="child" required>
+          <option disabled value="">Please select one</option>
+          <option v-for="child in children" :key="child.id">
+            {{ child.fullName }}
+          </option>
+        </select>
+      </div>
+      <div class="question">
+        <label> "Was the child happy after the session?</label>
+        <div class="answers">
+          <div>
+            <input
+              type="radio"
+              name="happiness"
+              id="happiness"
+              value="yes"
+              v-model="isHappy"
+            />
+            <label for="happiness">YES</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              name="happiness"
+              id="happiness"
+              value="no"
+              v-model="isHappy"
+            />
+            <label for="happiness">NO</label>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="question">
+          <label> "Did the child try to communicate?</label>
+          <div class="answers">
+            <div>
+              <input
+                type="radio"
+                name="communication"
+                id="communication"
+                value="yes"
+                v-model="isCommunicative"
+              />
+              <label for="comunication">YES</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                name="communication"
+                id="communication"
+                value="no"
+                v-model="isCommunicative"
+              />
+              <label for="communication">NO</label>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div>
+          <div class="question">
+            <label> "Was the session a success?</label>
+            <div class="answers">
+              <div>
+                <input
+                  type="radio"
+                  name="success"
+                  id="success"
+                  value="yes"
+                  v-model="isSuccess"
+                />
+                <label for="success">YES</label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  name="success"
+                  id="success"
+                  value="no"
+                  v-model="isSuccess"
+                />
+                <label for="success">NO</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <br />
-      <label>Child</label>
-      <select v-model="child" required>
-        <option disabled value="">Please select one</option>
-        <option v-for="child in children" :key="child.id">
-          {{ child.fullName }}
-        </option>
-      </select>
-      <label> "Was the child happy after the session?</label>
-      <input
-        type="radio"
-        name="happiness"
-        id="happiness"
-        value="yes"
-        v-model="isHappy"
-      />
-      <label for="happiness">YES</label>
-      <input
-        type="radio"
-        name="happiness"
-        id="happiness"
-        value="no"
-        v-model="isHappy"
-      />
-      <label for="happiness">NO</label>
-      <br />
-      <label> "Did the child try to communicate?</label>
-      <input
-        type="radio"
-        name="communication"
-        id="communication"
-        value="yes"
-        v-model="isCommunicative"
-      />
-      <label for="comunication">YES</label>
-      <input
-        type="radio"
-        name="communication"
-        id="communication"
-        value="no"
-        v-model="isCommunicative"
-      />
-      <label for="communication">NO</label>
-      <br />
-      <label> "Was the session a success?</label>
-      <input
-        type="radio"
-        name="success"
-        id="success"
-        value="yes"
-        v-model="isSuccess"
-      />
-      <label for="success">YES</label>
-      <input
-        type="radio"
-        name="success"
-        id="success"
-        value="no"
-        v-model="isSuccess"
-      />
-      <label for="success">NO</label>
-      <br />
-      <label for="data">Date:</label>
-      <input type="date" id="data" name="data" v-model="date" required />
+      <div class="date">
+        <label for="data">Date:</label>
+        <input type="date" id="data" name="data" v-model="date" required />
+      </div>
 
       <button class="submit">Submit New Evaluation</button>
     </form>
     <div class="confirmation" v-if="isShown">
-      <h3>New evaluation added</h3>
+      <h2>New evaluation added</h2>
       <div>
         <button @click="redirect">See Evaluation</button>
         <button @click="isShown = !isShown">Close</button>
@@ -110,7 +142,7 @@ export default {
     const { user } = getUser();
     const caregiver = ref("");
     const child = ref("");
-    const date = ref(null);
+    const date = ref(new Date().toISOString().substr(0, 10));
     const isHappy = ref(null);
     const isCommunicative = ref(null);
     const isSuccess = ref(null);
@@ -160,7 +192,7 @@ export default {
   border-radius: 12px;
   position: fixed;
   bottom: 20%;
-  right: 0%;
+  left: 50%;
   transform: translate(-50%, -50%);
   width: 350px;
   text-align: center;
@@ -182,53 +214,93 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-form {
+
+.new-evaluation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.new-evaluation form {
   max-width: 480px;
   margin: 0 auto;
   text-align: left;
 }
-select {
-  margin-left: 20px;
-}
-/* input, textarea {
-    display: block;
-    margin: 10px 0;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px;
-    border: 1px solid #eee;
-  } */
-/* textarea {
-    height: 160px;
-  } */
 label {
-  display: inline-block;
-  margin-top: 30px;
-  position: relative;
-  font-size: 20px;
-  color: white;
-  margin-bottom: 10px;
-}
-label::before {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: #008cff;
-  position: absolute;
-  z-index: -1;
-  padding-right: 40px;
-  left: -30px;
-  transform: rotateZ(-1.5deg);
+  margin-bottom: 20px;
+  font-weight: 600;
 }
 
-/* .pill {
-    display: inline-block;
-    margin: 10px 10px 0 0;
-    color: #444;
-    background: #ddd;
-    padding: 8px;
-    border-radius: 20px;
-    font-size: 14px;
-  } */
+.custom-dropdown {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  vertical-align: middle;
+  margin: 10px 10px 30px 10px;
+}
+
+.custom-dropdown select {
+  background-color: #008cff;
+  color: #fff;
+  font-size: inherit;
+  padding: 0.5em;
+  padding-right: 2.5em;
+  border: 0;
+  margin: 0;
+  border-radius: 3px;
+  text-indent: 0.01px;
+  text-overflow: "";
+}
+
+.custom-dropdown::before,
+.custom-dropdown::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.custom-dropdown::after {
+  /*  Custom dropdown arrow */
+  content: "\25BC";
+  height: 1em;
+  font-size: 0.625em;
+  line-height: 1;
+  right: 1.2em;
+  top: 50%;
+  margin-top: -0.5em;
+}
+
+.custom-dropdown select[disabled] {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.custom-dropdown select[disabled]::after {
+  color: rgba(0, 0, 0, 0.1);
+}
+
+.custom-dropdown::before {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.custom-dropdown::after {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.question {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.answers {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.date {
+  display: flex;
+  flex-direction: column;
+}
+
 </style>
