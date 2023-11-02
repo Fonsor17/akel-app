@@ -6,9 +6,9 @@
     <button class="add-evaluation">Add Evaluation<i class="fa-solid fa-file-circle-plus"></i></button>
   </router-link>
 </div>
-  <!-- <h3 v-if="evaluations && evaluations.length === 0"> 
-    No {{ name }}' evaluations found
-  </h3> -->
+  <h3 v-if="evaluations && evaluations.length === 0"> 
+    No {{ name }}'s evaluations found
+  </h3>
   <EvaluationCard
     v-for="evaluation in evaluations"
     :key="evaluation.id"

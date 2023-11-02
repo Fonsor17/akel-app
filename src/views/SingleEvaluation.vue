@@ -1,51 +1,60 @@
 <template>
   <div class="evaluation-container">
-  <div v-if="evaluation" class="evaluation">
-    <h3>Evaluation of {{ evaluation.date }}</h3>
-    <h3>
-      On <span> {{ evaluation.child }}</span>
-    </h3>
-    <h3>
-      By <span> {{ evaluation.caregiver }}</span>
-    </h3>
-    <div class="questions">
-      <p>
-        "Was the child happy after the session?
-        <span v-if="evaluation.isHappy">Yes</span>
-        <span v-else>No</span>
-      </p>
-      <p>
-        "Did the child try to communicate?
-        <span v-if="evaluation.isCommunacative">Yes</span>
-        <span v-else>No</span>
-      </p>
-      <p>
-        "Was the session a success?
-        <span v-if="evaluation.isSuccess">Yes</span>
-        <span v-else>No</span>
-      </p>
-    </div>
-    <router-link :to="{ name: 'child', params: { name: evaluation.child }}">
-      <button>
-        See the other evaluation conducted on {{ evaluation.child }}
+    <div v-if="evaluation" class="evaluation">
+      <button @click="isShown = !isShown" class="delete">
+        <i class="fa-solid fa-trash-can"></i>
       </button>
-    </router-link>
+      <div class="confirmation-delete" v-if="isShown">
+        <h3>Are you sure to continue and delete this evaluation?</h3>
+        <button @click="handleDelete" id="continue">Continue</button>
+        <button @click="isShown = !isShown">Cancel</button>
+      </div>
+      <h3>Evaluation of {{ evaluation.date }}</h3>
+      <h3>
+        On <span> {{ evaluation.child }}</span>
+      </h3>
+      <h3>
+        By <span> {{ evaluation.caregiver }}</span>
+      </h3>
+      <div class="questions">
+        <p>
+          "Was the child happy after the session?
+          <span v-if="evaluation.isHappy">Yes</span>
+          <span v-else>No</span>
+        </p>
+        <p>
+          "Did the child try to communicate?
+          <span v-if="evaluation.isCommunacative">Yes</span>
+          <span v-else>No</span>
+        </p>
+        <p>
+          "Was the session a success?
+          <span v-if="evaluation.isSuccess">Yes</span>
+          <span v-else>No</span>
+        </p>
+      </div>
+      <router-link :to="{ name: 'child', params: { name: evaluation.child } }">
+        <button>
+          See the other evaluations conducted on {{ evaluation.child }}
+        </button>
+      </router-link>
+    </div>
+    <div v-else>Evaluation not found</div>
   </div>
-  <div v-else>Evaluation not found</div>
-</div>
-  
 </template>
 
 <script>
 import { ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 // firebase import
 import { db } from "../firebase/config";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, deleteDoc } from "firebase/firestore";
 
 export default {
   setup() {
     const route = useRoute();
+    const router = useRouter();
+    const isShown = ref(false);
     const evaluation = ref(null);
     // function to get just one evaluation from firestore
     const getEvaluation = async (id) => {
@@ -65,7 +74,15 @@ export default {
 
     getEvaluation(route.params.id);
 
-    return { evaluation };
+    const handleDelete = () => {
+      const docRef = doc(db, "evaluations", route.params.id);
+
+      deleteDoc(docRef);
+      // redirecting after delete
+      router.go(-1);
+    };
+
+    return { evaluation, isShown, handleDelete };
   },
 };
 </script>
@@ -77,6 +94,7 @@ export default {
 }
 
 .evaluation {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -86,5 +104,12 @@ export default {
 }
 .evaluation h3 {
   font-weight: 700;
+}
+
+.delete {
+  position: absolute;
+  right: 2%;
+  height: 55px;
+  top: -3%;
 }
 </style>
